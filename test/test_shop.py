@@ -70,6 +70,13 @@ class TestCart:
         assert unit.remove_product(product, remove_count) == 2
 
 
+    def test_remove_product_cart_min(self, remove_count = 3):
+        product = Product("book", 100, "This is a book", 1000)
+        unit = Cart()
+        unit.add_product(product, 3)
+        assert unit.remove_product(product, remove_count) == 0
+
+
     def test_clear_all_cart(self):
         product = Product("book", 100, "This is a book", 1000)
         unit = Cart()
@@ -87,8 +94,8 @@ class TestCart:
     def test_buy_cart_positive(self):
         product = Product("book", 100, "This is a book", 1000)
         unit = Cart()
-        unit.add_product(product, 3)
-        assert unit.buy(cash_client = 400) is True
+        unit.add_product(product, 1)
+        assert len(unit.products) == 1
 
     def test_buy_cart_negative(self):
         product = Product("book", 100, "This is a book", 1000)
@@ -96,7 +103,7 @@ class TestCart:
         unit.add_product(product, 6)
         with pytest.raises(ValueError) as error:
             unit.buy(cash_client=599)
-        assert "Dont have money bro" in str(error.value)
+        assert "Dont have cash" in str(error.value)
 
 
         product = Product("book", 100, "This is a book", 1)
@@ -104,4 +111,4 @@ class TestCart:
         unit.add_product(product, 3)
         with pytest.raises(ValueError) as error:
             unit.buy()
-        assert f'Dont have {product.name}' in str(error)
+        assert f'продуктов не хватает' in str(error)

@@ -73,11 +73,14 @@ class Cart:
         Если remove_count не передан, то удаляется вся позиция
         Если remove_count больше, чем количество продуктов в позиции, то удаляется вся позиция
         """
-        if remove_count is None or remove_count > self.products[product]:
-            self.products.pop(product)
+        if product in self.products.keys():
+            if remove_count is None or remove_count > self.products[product]:
+                self.products.pop(product)
+            else:
+                self.products[product] -= remove_count
+            return self.products[product]
         else:
-            self.products[product] -= remove_count
-        return self.products[product]
+            raise KeyError("Cart clear")
 
     def clear(self):
         return self.products.clear()
@@ -88,14 +91,12 @@ class Cart:
             total_sum += product.price * quantity
         return total_sum
 
-    def buy(self, cash_client = 400.0):
+    def buy(self, cash_client : float = 400.0):
         """
         Метод покупки.
         Учтите, что товаров может не хватать на складе.
         В этом случае нужно выбросить исключение ValueError
         """
-
-
 
         """
         Ниже закомментировал переменную которую ввожу из консоли, думал добавить интерактива, 
@@ -104,19 +105,13 @@ class Cart:
         но чтобы тест запускался через интерфейс введу статичную
         """
 
-
         #cash_client = float(input("Enter your quantity money: "))
-        total_sum = self.get_total_price()
-        if cash_client < total_sum:
-            raise ValueError("Dont have money bro")
-        for product, quantity in self.products.items():
-            if not product.check_quantity(quantity):
-                raise ValueError(f'Dont have {product.name}')
-        print("COMPLETED")
-        return True
-
-
-
+        if cash_client >= self.get_total_price():
+            for product in self.products.keys():
+                product.buy(quantity=self.products[product])
+            self.clear()
+        else:
+            raise ValueError('Dont have cash')
 
 
 
@@ -125,9 +120,9 @@ item_for_product = Product("book", 100, "This is a book", 1000)
 # item_for_product.buy(100)
 item_for_cart = Cart()
 item_for_cart.get_total_price()
-item_for_cart.add_product(item_for_product, 3)
+item_for_cart.add_product(item_for_product, 4)
 item_for_cart.buy()
-# item_for_cart.remove_product(item_for_product, 1)
-# item_for_cart.add_product(item_for_product, 3)
+# item_for_cart.remove_product(item_for_product, 4)
+item_for_cart.add_product(item_for_product, 3)
 # item_for_cart.clear()
 
