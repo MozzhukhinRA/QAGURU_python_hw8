@@ -70,7 +70,7 @@ class TestCart:
         assert unit.remove_product(product, remove_count) == 2
 
 
-    def test_remove_product_cart_min(self, remove_count = 3):
+    def test_remove_product_cart_min(self):
         product = Product("book", 100, "This is a book", 1000)
         unit = Cart()
         with pytest.raises(KeyError) as error:
