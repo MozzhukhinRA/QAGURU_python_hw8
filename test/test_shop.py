@@ -73,8 +73,9 @@ class TestCart:
     def test_remove_product_cart_min(self, remove_count = 3):
         product = Product("book", 100, "This is a book", 1000)
         unit = Cart()
-        unit.add_product(product, 3)
-        assert unit.remove_product(product, remove_count) == 0
+        with pytest.raises(KeyError) as error:
+            unit.remove_product(product=product, remove_count=product.quantity + 1)
+        assert "Cart clear" in str(error.value)
 
 
     def test_clear_all_cart(self):
