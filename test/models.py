@@ -74,7 +74,7 @@ class Cart:
         Если remove_count больше, чем количество продуктов в позиции, то удаляется вся позиция
         """
         if product in self.products.keys():
-            if remove_count is None or remove_count > self.products[product]:
+            if remove_count is None or remove_count >= self.products[product]:
                 self.products.pop(product)
             else:
                 self.products[product] -= remove_count
